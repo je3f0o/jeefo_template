@@ -1,0 +1,79 @@
+
+{ Single line minified string must be in line 2 }
+mdTruncate.md-display-1("$LABEL")+[key="value" test]+.test>.hello+mdInput+[ngBind="label"]>[ngClick="test()"]("hello")^^
+
+{ Stupid endings... }
+root >> ^^
+
+{ Comment }
+
+eachCases >
+	singleQuote[singleQuoteAttr='foo=\'bar\'']('Single \' escape value') +
+	doubleQuote[doubleQuoteAttr="foo=\"bar\""]("Double \" escape value") +
+	noWhiteSpace[s='s'd="d"]("No white space") +
+	dashed-case[dashed-attr="dashed"]("Dashed case") +
+	dashed-with-number-1[dashed-with-number-1="123"]("Dashed case with numbers") +
+	mdSidenav.md-whiteframe-1dp[zIndex-1dp="123"]("Dashed case with numbers") +
+	withNewLine[a
+	b] ^
+
+
+myForm >
+	.page-layout.tabbed.center[layout="column"] >
+		.content-header.md-accent-bg[layout="row" layoutAlign="start center"] >
+			[layout="row" layoutAlign="start center" flex] >
+				mdButton.md-icon-button[style="margin-right: 16px; color: red; color: #134; color: rgb(255,225,0);" ngClick="go_back();"] >
+					ngMdIcon[icon="arrow_back"] ^
+				[layout="row" layoutAlign="start center"] >
+					mdTruncate.md-display-1("$LABEL") +
+					small("testeeee")
+				^   ^
+			div >
+				mdButton.md-raised[ngClick="submit(form, values)"]("Save")
+			^   ^
+		.content-body[layout="column" flex] >
+			mdTabs[ngClass="{ \'md-accent md-hue-2\' : theme_contrast === \'dark\' }" mdDynamicHeight]("$CONTENT")
+	^   ^   ^
+
+mdCard[style="margin: -24px; padding: 0;"] >
+	mdToolbar.md-table-toolbar[ngHide="$subtable.selected_rows_length" ngClass="{ dark : $subtable.is_dark() }"] >
+		.md-toolbar-tools >
+			mdTruncate[ngBind="$subtable.label" flex] +
+			mdButton.md-icon-button[ngClick="$subtable.dialog($event)" ariaLabel="New record"] >
+				mdTooltip("Add new record") +
+				ngMdIcon[icon="add"] ^
+			mdButton.md-icon-button[ngClick="$subtable.export_excel()" ariaLabel="Reload"] >
+				mdTooltip("Export excel") +
+				ngMdIcon[icon="file_download"] ^
+			mdButton.md-icon-button[ngClick="$subtable.reload()" ariaLabel="Reload"] >
+				mdTooltip("Refresh") +
+				ngMdIcon[icon="refresh"] ^
+			mdButton.md-icon-button[ngClick="$subtable.md_table.select_column($event)" ariaLabel="Menu"] >
+				mdTooltip("Visibility") +
+				ngMdIcon[icon="visibility"]
+		^   ^   ^
+	mdToolbar[ngShow="$subtable.selected_rows_length" class="{{ $subtable.is_dark() ? 'md-' + $subtable.theme + '-theme md-accent' : 'md-table-row-selection' }}"] >
+		.md-toolbar-tools >
+			mdTruncate.md-subhead[flex]("{{ $subtable.selected_rows_length }} item selected") +
+			mdButton.md-icon-button[ngClick="$subtable.delete_selected_records()" ariaLabel="Delete selected records"] >
+				ngMdIcon[icon="delete"]
+		^   ^   ^
+	mdTable[
+		isDark            = "$subtable.is_dark()"
+		instance          = "$subtable.md_table"
+		mdProgress        = "$subtable.promise"
+		renderableColumns = "$subtable.headers"
+	] >
+		mdHead >
+			mdRow("$HEADERS") ^
+		mdBody >
+			mdRow[ngRepeat="record in $subtable.data" ngClick="$subtable.toggle_select(record.record_id)"]("$BODY")
+		^   ^
+	mdTablePagination[
+		page         = "$subtable.table.page"
+		total        = "$subtable.total"
+		limit        = "$subtable.table.limit"
+		limitOptions = "[5, 10, 15]"
+		isDark       = "$subtable.is_dark()"
+		onPaginate   = "$subtable.on_paginate(page, limit)"
+		boundaryLinks, pageSelect]
