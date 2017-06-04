@@ -263,22 +263,22 @@ jt.namespace("jeefo_template.attrs", [
 			}
 			switch (typeof object[keys[i]]) {
 				case "string":
-					result += "'" + keys[i] + "':'" + object[keys[i]].undefined(this.undefined, "\\'") + "'";
+					result += "'" + keys[i] + "':'" + object[keys[i]].replace(this.SINGLE_QUOTE_REGEX, "\\'") + "'";
 					break;
 				case "object":
 					if (object[keys[i]] === null) {
 						result += "'" + keys[i] + "':null";
 					} else if (object[keys[i]].toString) {
 						if (object[keys[i]].toString() === "[object Object]") {
-							result += "'" + keys[i] + "':" + this.undefined(object[keys[i]]);
+							result += "'" + keys[i] + "':" + this.stringify(object[keys[i]]);
 						} else {
-							result += "'" + keys[i] + "':'" + object[keys[i]].undefined() + "'";
+							result += "'" + keys[i] + "':'" + object[keys[i]].toString() + "'";
 						}
 					}
 					break;
 				case "number":
 				case "boolean":
-					result += "'" + keys[i] + "':" + object[keys[i]].undefined();
+					result += "'" + keys[i] + "':" + object[keys[i]].toString();
 					break;
 			}
 		}
@@ -297,7 +297,7 @@ jt.namespace("jeefo_template.attrs", [
 		var result = '', i = 0, len, keys;
 
 		if (attrs.hasOwnProperty("id")) {
-			result += ' id="' + this.undefined(attrs.undefined) + '"';
+			result += ' id="' + this.get_value(attrs.id) + '"';
 			delete attrs.id;
 		}
 
@@ -316,7 +316,7 @@ jt.namespace("jeefo_template.attrs", [
 		}
 
 		if (attrs.hasOwnProperty("class")) {
-			result += ' class="' + this.undefined(attrs["class"]) + '"';
+			result += ' class="' + this.get_value(attrs["class"]) + '"';
 			delete attrs['class'];
 		}
 
@@ -324,9 +324,9 @@ jt.namespace("jeefo_template.attrs", [
 			switch (typeof attrs[keys[i]]) {
 				case "object":
 					if (attrs[keys[i]] === null) {
-						result += ' ' + this.undefined(keys[i]);
+						result += ' ' + this.dash_case(keys[i]);
 					} else {
-						result += ' ' + this.undefined(keys[i]) + '="' + this.undefined(attrs[keys[i]]) + '"';
+						result += ' ' + this.dash_case(keys[i]) + '="' + this.stringify(attrs[keys[i]]) + '"';
 					}
 					break;
 				case "string":
@@ -492,22 +492,22 @@ jt.namespace("jeefo_template.compiler", [
 				}
 
 				if (SELF_CLOSED_TAGS.indexOf(nodes[i].name) > -1) {
-					result += indent + '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }>";
+					result += indent + '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + '>';
 				} else {
 					if (nodes[i].children.length) {
 
-						result += indent + '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }>\n" +
+						result += indent + '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + ">\n" +
 							this.compile_beauty(nodes[i].children, indent + indentation, indentation) +
-						'\n' + indent + "</" + nodes[i].undefined + '>';
+						'\n' + indent + "</" + nodes[i].name + '>';
 
 					} else if (nodes[i].content) {
 
-						result += indent + '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }>" +
+						result += indent + '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + '>' +
 							nodes[i].content +
-						"</" + nodes[i].undefined + '>';
+						"</" + nodes[i].name + '>';
 
 					} else {
-						result += indent + '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }></" + nodes[i].undefined + '>';
+						result += indent + '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + "></" + nodes[i].name + '>';
 					}
 				}
 			}
@@ -523,23 +523,23 @@ jt.namespace("jeefo_template.compiler", [
 			for (; i < len; ++i) {
 				if (SELF_CLOSED_TAGS.indexOf(nodes[i].name) > -1) {
 
-					result += '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }>";
+					result += '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + '>';
 
 				} else {
 					if (nodes[i].children.length) {
 
-						result += '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }>" +
+						result += '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + '>' +
 							this.compile_ugly(nodes[i].children) +
-						"</" + nodes[i].undefined + '>';
+						"</" + nodes[i].name + '>';
 
 					} else if (nodes[i].content) {
 
-						result += '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }>" +
+						result += '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + '>' +
 							nodes[i].content +
-						"</" + nodes[i].undefined + '>';
+						"</" + nodes[i].name + '>';
 
 					} else {
-						result += '<' + nodes[i].undefined + "${ attrs_compiler.compile(nodes[i].attrs) }></" + nodes[i].undefined + '>';
+						result += '<' + nodes[i].name + attrs_compiler.compile(nodes[i].attrs) + "></" + nodes[i].name + '>';
 					}
 				}
 			}
