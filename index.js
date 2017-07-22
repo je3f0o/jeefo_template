@@ -1,19 +1,17 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : index.js
-* Created at  : 2017-04-26
-* Updated at  : 2017-06-03
+* Created at  : 2017-04-12
+* Updated at  : 2017-07-22
 * Author      : jeefo
 * Purpose     :
 * Description :
 _._._._._._._._._._._._._._._._._._._._._.*/
-//ignore:start
-"use strict";
+// ignore:start
 
 /* global */
 /* exported */
-/* exported */
 
-//ignore:end
+// ignore:end
 
 var _package = require("./package");
 

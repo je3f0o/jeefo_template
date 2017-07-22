@@ -1,6 +1,6 @@
 {
   "name": "jeefo_template",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "jeefo template",
   "author": {
     "name": "je3f0o",
@@ -25,16 +25,16 @@
   "devDependencies": {
     "expect": "^1.20.2",
     "fs-extra": "^0.30.0",
-    "jeefo_javascript_beautifier": "^0.0.3",
-    "jeefo_javascript_parser": "^0.0.7",
+    "jeefo_javascript_beautifier": "^0.0.4",
+    "jeefo_javascript_parser": "^0.0.11",
     "mocha": "^3.0.2",
     "pygments": "^0.2.1",
     "uglify-js": "^2.7.3"
   },
   "dependencies": {
-    "jeefo": "^0.0.18",
-    "jeefo_core": "^0.0.12",
-    "jeefo_tokenizer": "^0.0.26"
+    "jeefo": "^0.0.26",
+    "jeefo_core": "^0.0.17",
+    "jeefo_tokenizer": "^0.0.28"
   },
   "uglify_config": {
     "mangle": {

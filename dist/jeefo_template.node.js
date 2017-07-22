@@ -4,7 +4,7 @@
 module.exports = function (jeefo) {
 
 /**
- * jeefo_template : v0.0.9
+ * jeefo_template : v0.0.11
  * Author         : je3f0o, <je3f0o@gmail.com>
  * Homepage       : https://github.com/je3f0o/jeefo_template
  * License        : The MIT License
@@ -15,14 +15,14 @@ jeefo.use(function (jeefo) {
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : jt_tokenizer.js
 * Created at  : 2017-04-10
-* Updated at  : 2017-06-03
+* Updated at  : 2017-07-22
 * Author      : jeefo
 * Purpose     :
 * Description :
 _._._._._._._._._._._._._._._._._._._._._.*/
 
 
-var jt = jeefo.module("jeefo_template", ["jeefo_tokenizer"]);
+var jt = jeefo.module("jeefo.template", ["jeefo.tokenizer"]);
 
 // Tokenizer {{{1
 jt.namespace("jeefo_template.tokenizer", ["tokenizer.Tokenizer"], function (Tokenizer) {

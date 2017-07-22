@@ -234,71 +234,39 @@ is-symbol@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.1.tgz#3cc59f00025194b6ab2e38dbae6689256b660572"
 
-jeefo@^0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/jeefo/-/jeefo-0.0.13.tgz#6174a3e47a3f90175969950c49f0eb48503caa41"
-
-jeefo@^0.0.18:
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/jeefo/-/jeefo-0.0.18.tgz#9990035d4c7cc8058f08908004db3688fb3a2961"
-
-jeefo_core@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/jeefo_core/-/jeefo_core-0.0.10.tgz#ece31c290ed47b266ffe78d5f6fc930c6df62178"
-  dependencies:
-    jeefo "^0.0.13"
-
-jeefo_core@^0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/jeefo_core/-/jeefo_core-0.0.12.tgz#2c553c393824cfc7119fc74d700f5a4e1b7757ea"
-  dependencies:
-    jeefo "^0.0.13"
-
-jeefo_javascript_beautifier@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/jeefo_javascript_beautifier/-/jeefo_javascript_beautifier-0.0.3.tgz#0b3dd70f891882bf3a076130fe28b0b3caa0cc72"
-  dependencies:
-    jeefo "^0.0.13"
-    jeefo_core "^0.0.10"
-    jeefo_javascript_parser "^0.0.6"
-    jeefo_tokenizer "^0.0.21"
-
-jeefo_javascript_parser@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/jeefo_javascript_parser/-/jeefo_javascript_parser-0.0.6.tgz#16125a435416cfae96ec5aff7767d729d28734e1"
-  dependencies:
-    jeefo "^0.0.13"
-    jeefo_core "^0.0.10"
-    jeefo_tokenizer "^0.0.21"
-
-jeefo_javascript_parser@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/jeefo_javascript_parser/-/jeefo_javascript_parser-0.0.7.tgz#c2c30bd99a0f5dbf1c9c39751d46ada00f940aaf"
-  dependencies:
-    jeefo "^0.0.18"
-    jeefo_core "^0.0.12"
-    jeefo_tokenizer "^0.0.25"
-
-jeefo_tokenizer@^0.0.21:
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/jeefo_tokenizer/-/jeefo_tokenizer-0.0.21.tgz#a5079b59185a61ea88296a0214027137f80de9f3"
-  dependencies:
-    jeefo "^0.0.13"
-    jeefo_core "^0.0.10"
-
-jeefo_tokenizer@^0.0.25:
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/jeefo_tokenizer/-/jeefo_tokenizer-0.0.25.tgz#c5374427e36b1e76924af2aeed1071ded7778dee"
-  dependencies:
-    jeefo "^0.0.18"
-    jeefo_core "^0.0.12"
-
-jeefo_tokenizer@^0.0.26:
+jeefo@^0.0.26:
   version "0.0.26"
-  resolved "https://registry.yarnpkg.com/jeefo_tokenizer/-/jeefo_tokenizer-0.0.26.tgz#15e3dca62d186cf9bb4f21fce7ab968bcfdd8cce"
+  resolved "https://registry.yarnpkg.com/jeefo/-/jeefo-0.0.26.tgz#ef3be96d7d4ffded08fb108635ae4b291a5f017a"
+
+jeefo_core@0.0.17, jeefo_core@^0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/jeefo_core/-/jeefo_core-0.0.17.tgz#7f84488d2d5c27e690bfc094a175a07e7b2247ed"
   dependencies:
-    jeefo "^0.0.18"
-    jeefo_core "^0.0.12"
+    jeefo "^0.0.26"
+
+jeefo_javascript_beautifier@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/jeefo_javascript_beautifier/-/jeefo_javascript_beautifier-0.0.4.tgz#d9beb1d4047c1a5128993da4d4574284bac82b89"
+  dependencies:
+    jeefo "^0.0.26"
+    jeefo_core "^0.0.17"
+    jeefo_javascript_parser "^0.0.11"
+    jeefo_tokenizer "^0.0.28"
+
+jeefo_javascript_parser@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/jeefo_javascript_parser/-/jeefo_javascript_parser-0.0.11.tgz#519c0c3f9b752fe45d290b725b70053d2faad9c7"
+  dependencies:
+    jeefo "^0.0.26"
+    jeefo_core "^0.0.17"
+    jeefo_tokenizer "^0.0.28"
+
+jeefo_tokenizer@^0.0.28:
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/jeefo_tokenizer/-/jeefo_tokenizer-0.0.28.tgz#597d0902a7123c49f07da95ee99b468a30ed852b"
+  dependencies:
+    jeefo "^0.0.26"
+    jeefo_core "0.0.17"
 
 json3@3.3.2:
   version "3.3.2"

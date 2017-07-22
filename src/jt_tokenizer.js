@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : jt_tokenizer.js
 * Created at  : 2017-04-10
-* Updated at  : 2017-06-03
+* Updated at  : 2017-07-22
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -18,7 +18,7 @@ jeefo.use(require("jeefo_tokenizer"));
 
 // ignore:end
 
-var jt = jeefo.module("jeefo_template", ["jeefo_tokenizer"]);
+var jt = jeefo.module("jeefo.template", ["jeefo.tokenizer"]);
 
 // Tokenizer {{{1
 jt.namespace("jeefo_template.tokenizer", ["tokenizer.Tokenizer"], function (Tokenizer) {
