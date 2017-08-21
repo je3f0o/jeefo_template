@@ -1,6 +1,6 @@
 {
   "name": "jeefo_template",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "jeefo template",
   "author": {
     "name": "je3f0o",
@@ -10,9 +10,7 @@
   "license": "MIT",
   "copyright": "2017",
   "main": "index.js",
-  "scripts": {
-    "build": "node build"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/je3f0o/jeefo_template.git"
@@ -20,29 +18,11 @@
   "keywords": [
     "jeefo",
     "token",
-    "tokenizer"
+    "tokenizer",
+    "template"
   ],
-  "devDependencies": {
-    "expect": "^1.20.2",
-    "fs-extra": "^0.30.0",
-    "jeefo_javascript_beautifier": "^0.0.4",
-    "jeefo_javascript_parser": "^0.0.11",
-    "mocha": "^3.0.2",
-    "pygments": "^0.2.1",
-    "uglify-js": "^2.7.3"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "jeefo": "^0.0.26",
-    "jeefo_core": "^0.0.17",
-    "jeefo_tokenizer": "^0.0.28"
-  },
-  "uglify_config": {
-    "mangle": {
-      "toplevel": true
-    },
-    "compress": {
-      "comparisons": false
-    },
-    "fromString": true
+    "jeefo_tokenizer": "^0.0.29"
   }
 }
