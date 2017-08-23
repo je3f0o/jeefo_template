@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : index.js
 * Created at  : 2017-08-09
-* Updated at  : 2017-08-21
+* Updated at  : 2017-08-24
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -13,7 +13,7 @@ _._._._._._._._._._._._._._._._._._._._._.*/
 
 // ignore:end
 
-var parser = require("./src/parser");
+var parser = require("./parser");
 
 module.exports = function (source, indent, tab_space) {
 	var line_break = '', current_indent = '', indentation = '',
