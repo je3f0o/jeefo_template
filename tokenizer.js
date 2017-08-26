@@ -13,17 +13,12 @@ _._._._._._._._._._._._._._._._._._._._._.*/
 
 // ignore:end
 
-var tokens = [
-	"comment",
-	"element",
-	"operator"
-],
-Tokenizer = require("jeefo_tokenizer"),
-tokenizer = new Tokenizer();
+var Tokenizer = require("jeefo_tokenizer"),
+	tokenizer = new Tokenizer();
 
-tokens.forEach(function (token) {
-	token = require(`./tokens/${ token }.js`);
-	tokenizer.register(token);
-});
+tokenizer.
+	register(require("./tokens/comment.js")).
+	register(require("./tokens/element.js")).
+	register(require("./tokens/operator.js"));
 
 module.exports = tokenizer;
