@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : node_element.js
 * Created at  : 2017-08-11
-* Updated at  : 2017-08-21
+* Updated at  : 2017-08-26
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -13,7 +13,8 @@ _._._._._._._._._._._._._._._._._._._._._.*/
 
 // ignore:end
 
-var dash_case        = require("jeefo_utils/string/dash_case"),
+var Events           = require("./events"),
+	dash_case        = require("jeefo_utils/string/dash_case"),
 	ClassList        = require("./class_list"),
 	Attributes       = require("./attributes"),
 	SELF_CLOSED_TAGS = ["img", "input", "hr", "br", "col"];
@@ -21,8 +22,8 @@ var dash_case        = require("jeefo_utils/string/dash_case"),
 var NodeElement = function (token, parent) {
 	this.id         = token.id || null;
 	this.name       = token.name ? dash_case(token.name) : "div";
-	this.attrs      = new Attributes(token.attrs);
-	this.events     = token.events;
+	this.attrs      = token.attrs  || new Attributes();
+	this.events     = token.events || new Events();
 	this.parent     = parent || null;
 	this.content    = token.content || null;
 	this.children   = [];
@@ -31,28 +32,10 @@ var NodeElement = function (token, parent) {
 
 NodeElement.prototype = {
 	clear : function () {
-		this.id              = null;
-		this.name            = "div";
-		this.events          = [];
-		this.content         = null;
-		this.children        = [];
-		this.attrs.keys      = [];
-		this.class_list.list = [];
+		throw new Error("NODE ELEMENT CLEAR");
 	},
 	clone : function () {
-		var node = new NodeElement({
-			id         : this.id,
-			name       : this.name,
-			attrs      : null,
-			events     : this.events,
-			content    : this.content,
-			children   : this.children,
-			class_list : this.class_list.list
-		}, this.parent);
-
-		node.attrs = this.attrs.clone();
-
-		return node;
+		throw new Error("NODE ELEMENT CLONE");
 	},
 	compile : function (indent, indentation) {
 		var attrs = this.attrs.compile(), line_break = indentation ? '\n' : '', content;

@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : attributes.js
 * Created at  : 2017-08-14
-* Updated at  : 2017-08-21
+* Updated at  : 2017-08-26
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -59,15 +59,9 @@ var stringify = function (object) {
 	return `{ ${ result } }`;
 };
 
-var Attributes = function (attrs) {
+var Attributes = function () {
 	this.keys   = [];
 	this.values = {};
-
-	if (attrs) {
-		for (var i = 0; i < attrs.length; ++i) {
-			this.set(attrs[i].key, attrs[i].value);
-		}
-	}
 };
 
 Attributes.prototype = {

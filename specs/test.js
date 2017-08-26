@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : test.js
 * Created at  : 2017-08-21
-* Updated at  : 2017-08-21
+* Updated at  : 2017-08-26
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -21,7 +21,9 @@ var p = path.join(__dirname, "./test.jt");
 
 var source = fs.readFileSync(p, "utf8");
 
-var result = jt(source);
+var is_beauty = process.argv[2] === "true";
+
+var result = jt(source, is_beauty);
 
 console.log(result);
 
