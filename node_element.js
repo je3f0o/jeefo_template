@@ -26,16 +26,16 @@ var NodeElement = function (token, parent) {
 	this.events     = token.events || new Events();
 	this.parent     = parent || null;
 	this.content    = token.content || null;
-	this.children   = [];
-	this.class_list = new ClassList(token.class_list);
+	this.children   = token.children || [];
+	this.class_list = token.class_list || new ClassList();
 };
 
 NodeElement.prototype = {
 	clear : function () {
-		throw new Error("NODE ELEMENT CLEAR");
+		return new NodeElement({});
 	},
 	clone : function () {
-		throw new Error("NODE ELEMENT CLONE");
+		return new NodeElement(this);
 	},
 	compile : function (indent, indentation) {
 		var attrs = this.attrs.compile(), line_break = indentation ? '\n' : '', content;

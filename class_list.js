@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : class_list.js
 * Created at  : 2017-08-14
-* Updated at  : 2017-08-21
+* Updated at  : 2017-08-26
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -27,18 +27,13 @@ var ClassList = function (list) {
 };
 
 ClassList.prototype = {
-	add : function () {
-		for (var i = 0; i < arguments.length; ++i) {
-			if (this.list.indexOf(arguments[i]) === -1) {
-				this.list.push(arguments[i]);
-			}
+	add : function (class_name) {
+		if (this.list.indexOf(class_name) === -1) {
+			this.list.push(class_name);
 		}
 	},
-	remove : function () {
-		var i = arguments.length;
-		while (i--) {
-			array_remove(this.list, arguments[i]);
-		}
+	remove : function (class_name) {
+		array_remove(this.list, class_name);
 	},
 	contains : function (name) {
 		return this.list.indexOf(name) !== -1;

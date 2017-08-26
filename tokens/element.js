@@ -15,9 +15,12 @@ _._._._._._._._._._._._._._._._._._._._._.*/
 
 var Events     = require("../events"),
 	dash_case  = require("jeefo_utils/string/dash_case"),
+	ClassList  = require("../class_list"),
 	Attributes = require("../attributes"),
 	end_cursor = require("./end_cursor"),
-	DELIMITERS = ".,>+^[]()=\"'#{}",
+
+	DELIMITERS       = ".,>+^[]() = \"'#{}",
+	WHITESPACE_REGEX = /\s+/,
 
 // Identifier {{{1
 parse_identifier = function (streamer) {
@@ -58,8 +61,11 @@ parse_content = function (streamer) {
 },
 
 // Attrs {{{1
-parse_attrs = function (streamer, attrs, events) {
-	var character = streamer.next(true), key, value;
+parse_attrs = function (streamer, token) {
+	var character = streamer.next(true),
+		attrs  = token.attrs,
+		events = token.events,
+		i, key, value;
 
 	while (character && character !== ']') {
 		if (character === '(') {
@@ -90,11 +96,24 @@ parse_attrs = function (streamer, attrs, events) {
 				streamer.next(true);
 				value = parse_value(streamer);
 				character = streamer.next(true);
+			} else if (key === "class") {
+				throw new SyntaxError("[JeefoTemplate]: Expected class value.");
 			} else {
 				value = null;
 			}
 
-			attrs.set(key, value);
+			if (key === "class") {
+				key   = token.class_list.list;
+				value = new ClassList(value.split(WHITESPACE_REGEX));
+
+				for (i = 0; i < key.length; ++i) {
+					value.add(key[i]);
+				}
+
+				token.class_list = value;
+			} else {
+				attrs.set(key, value);
+			}
 		}
 
 		while (character === ',') {
@@ -113,7 +132,7 @@ module.exports = {
 			this.type       = this.type;
 			this.attrs      = new Attributes();
 			this.events     = new Events();
-			this.class_list = [];
+			this.class_list = new ClassList();
 
 			switch (character) {
 				case '.':
@@ -137,9 +156,7 @@ module.exports = {
 					case '.' :
 						streamer.next(true);
 						_class = parse_identifier(streamer);
-						if (this.class_list.indexOf(_class) === -1) {
-							this.class_list.push(_class);
-						}
+						this.class_list.add(_class);
 						end       = streamer.get_cursor();
 						character = streamer.next(true);
 						break;
@@ -154,7 +171,7 @@ module.exports = {
 			}
 
 			if (character === '[') {
-				parse_attrs(streamer, this.attrs, this.events);
+				parse_attrs(streamer, this);
 				end       = streamer.get_cursor();
 				character = streamer.next(true);
 			}

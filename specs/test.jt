@@ -2,6 +2,8 @@
 { Single line minified string must be in line 2 }
 mdTruncate.md-display-1("$LABEL")+[key="value" test]+.test>.hello+mdInput+[ngBind="label"]>[ngClick="test()"]("hello")^^
 
+button.md-raised[class="md-button"] +
+
 { Stupid endings... }
 root >> ^^
 
