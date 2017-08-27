@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : class_list.js
 * Created at  : 2017-08-14
-* Updated at  : 2017-08-26
+* Updated at  : 2017-08-28
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -15,15 +15,8 @@ _._._._._._._._._._._._._._._._._._._._._.*/
 
 var array_remove = require("jeefo_utils/array/remove");
 
-var ClassList = function (list) {
+var ClassList = function () {
 	this.list = [];
-
-	if (list) {
-		var i = list.length;
-		while (i--) {
-			this.list[i] = list[i];
-		}
-	}
 };
 
 ClassList.prototype = {
@@ -38,6 +31,15 @@ ClassList.prototype = {
 	contains : function (name) {
 		return this.list.indexOf(name) !== -1;
 	},
+	clone : function () {
+		var class_list = new ClassList(), list = this.list, i = list.length;
+
+		while (i--) {
+			class_list.list[i] = list[i];
+		}
+
+		return class_list;
+	}
 };
 
 module.exports = ClassList;

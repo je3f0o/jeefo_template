@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : node_element.js
 * Created at  : 2017-08-11
-* Updated at  : 2017-08-26
+* Updated at  : 2017-08-28
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -32,10 +32,32 @@ var NodeElement = function (token, parent) {
 
 NodeElement.prototype = {
 	clear : function () {
-		return new NodeElement({});
+		this.id         = null;
+		this.name       = "div";
+		this.attrs      = new Attributes();
+		this.events     = new Events();
+		this.parent     = null;
+		this.content    = null;
+		this.children   = [];
+		this.class_list = new ClassList();
 	},
 	clone : function () {
-		return new NodeElement(this);
+		var node = new NodeElement({
+			id         : this.id || null,
+			name       : this.name,
+			attrs      : this.attrs.clone(),
+			events     : this.events.clone(),
+			parent     : this.parent,
+			content    : this.content || null,
+			class_list : this.class_list.clone()
+		}), i = this.children.length;
+
+		while (i--) {
+			node.children[i]        = this.children[i].clone();
+			node.children[i].parent = node;
+		}
+
+		return node;
 	},
 	compile : function (indent, indentation) {
 		var attrs = this.attrs.compile(), line_break = indentation ? '\n' : '', content;
