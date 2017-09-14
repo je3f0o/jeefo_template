@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : node_element.js
 * Created at  : 2017-08-11
-* Updated at  : 2017-08-28
+* Updated at  : 2017-09-14
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -21,7 +21,7 @@ var Events           = require("./events"),
 
 var NodeElement = function (token, parent) {
 	this.id         = token.id || null;
-	this.name       = token.name ? dash_case(token.name) : "div";
+	this.name       = token.name ? dash_case(token.name) : null;
 	this.attrs      = token.attrs  || new Attributes();
 	this.events     = token.events || new Events();
 	this.parent     = parent || null;

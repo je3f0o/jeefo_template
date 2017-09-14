@@ -1,6 +1,6 @@
 {
   "name": "jeefo_template",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "jeefo template",
   "author": {
     "name": "je3f0o",
@@ -22,7 +22,5 @@
     "template"
   ],
   "devDependencies": {},
-  "dependencies": {
-    "jeefo_tokenizer": "^0.0.29"
-  }
+  "dependencies": {}
 }
