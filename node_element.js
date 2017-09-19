@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : node_element.js
 * Created at  : 2017-08-11
-* Updated at  : 2017-09-14
+* Updated at  : 2017-09-17
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -72,8 +72,10 @@ NodeElement.prototype = {
 			attrs = `${ attrs } jeefo-component-id="${ this.component_id }"`;
 		}
 
+		var name = this.name || "div";
+
 		if (SELF_CLOSED_TAGS.indexOf(this.name) > -1) {
-			return `<${ this.name }${ attrs }>`;
+			return `<${ name }${ attrs }>`;
 		}
 
 		if (this.content) {
@@ -91,7 +93,7 @@ NodeElement.prototype = {
 			}
 		}
 
-		return `<${ this.name }${ attrs }>${ content }</${ this.name }>`;
+		return `<${ name }${ attrs }>${ content }</${ name }>`;
 	},
 };
 
