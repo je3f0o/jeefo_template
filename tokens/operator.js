@@ -1,38 +1,29 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : operator.js
 * Created at  : 2017-08-26
-* Updated at  : 2017-08-26
+* Updated at  : 2019-06-28
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* globals */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var end_cursor = require("./end_cursor");
+const operator_characters = ">+^";
 
 module.exports = {
-	is : function (character) {
-		switch (character) {
-			case '>':
-			case '+':
-			case '^':
-				return true;
-		}
-	},
-	protos : {
-		type       : "Operator",
-		precedence : 1,
-		initialize : function (character, streamer) {
-			this.type     = this.type;
-			this.operator = character;
+    id       : "Operator",
+    priority : 1,
 
-			this.start = streamer.get_cursor();
-			this.end   = end_cursor(this.start);
-		}
-	}
+	is         : character => operator_characters.includes(character),
+    initialize : (token, current_character, streamer) => {
+        token.operator = current_character;
+        token.start    = streamer.clone_cursor_position();
+        token.end      = streamer.clone_cursor_position();
+    }
 };

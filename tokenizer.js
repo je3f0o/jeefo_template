@@ -1,24 +1,24 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : tokenizer.js
 * Created at  : 2017-04-10
-* Updated at  : 2017-08-26
+* Updated at  : 2019-06-23
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* global */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var Tokenizer = require("jeefo_tokenizer"),
-	tokenizer = new Tokenizer();
+const Tokenizer = require("@jeefo/tokenizer");
+const tokenizer = new Tokenizer();
 
-tokenizer.
-	register(require("./tokens/comment.js")).
-	register(require("./tokens/element.js")).
-	register(require("./tokens/operator.js"));
+tokenizer.register(require("./tokens/comment"));
+tokenizer.register(require("./tokens/element"));
+tokenizer.register(require("./tokens/operator"));
 
 module.exports = tokenizer;

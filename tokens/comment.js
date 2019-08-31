@@ -1,42 +1,37 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : comment.js
 * Created at  : 2017-08-26
-* Updated at  : 2017-08-26
+* Updated at  : 2019-06-28
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* globals */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var end_cursor = require("./end_cursor");
-
 module.exports = {
-	is     : function (character) { return character === '{'; },
-	protos : {
-		type       : "Comment",
-		precedence : 1,
-		initialize : function (character, streamer) {
-			this.type = this.type;
+    id       : "Comment",
+    priority : 1,
 
-			var start = streamer.get_cursor(), start_index, end_index;
+	is         : character => character === '{',
+    initialize : (token, current_character, streamer) => {
+        const start = streamer.clone_cursor_position();
 
-			character   = streamer.next(true);
-			start_index = streamer.cursor.index;
+        let character = streamer.next(true);
+        while (character && character !== '}') {
+            character = streamer.next(true);
+        }
 
-			while (character && character !== '}') {
-				end_index = streamer.cursor.index;
-				character = streamer.next(true);
-			}
+        const end_index = streamer.cursor.position.index;
+        const value = streamer.string.substring(start.index + 1, end_index);
 
-			this.comment = streamer.seek(start_index, end_index + 1);
-
-			this.start = start;
-			this.end   = end_cursor(streamer.get_cursor());
-		}
+        token.value = value.trim();
+        token.start = start;
+        token.end   = streamer.clone_cursor_position();
 	}
 };

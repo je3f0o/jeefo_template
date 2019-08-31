@@ -1,118 +1,116 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : element.js
 * Created at  : 2017-08-26
-* Updated at  : 2017-08-26
+* Updated at  : 2019-07-09
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* globals */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var Events     = require("../events"),
-	dash_case  = require("jeefo_utils/string/dash_case"),
-	ClassList  = require("../class_list"),
-	Attributes = require("../attributes"),
-	end_cursor = require("./end_cursor"),
+const dash_case  = require("@jeefo/utils/string/dash_case");
+const Attributes = require("./attributes");
 
-	DELIMITERS       = ".,>+^[]() = \"'#{}",
-	WHITESPACE_REGEX = /\s+/,
+const delimiters         = ".,>+^[]()=\"'#{}";
+const special_characters = ".#[(+>^";
 
-// Identifier {{{1
-parse_identifier = function (streamer) {
-	var character   = streamer.current(),
-		start_index = streamer.cursor.index, end;
+const WHITESPACE_REGEX = /\s+/;
 
-	while (character && character > ' ' && DELIMITERS.indexOf(character) === -1) {
-		end       = streamer.get_cursor();
-		character = streamer.next();
+function parse_content (streamer) {
+	const start_index = streamer.cursor.position.index + 1;
+
+	let character = streamer.next();
+	while (character && character !== ')') {
+        character = streamer.next();
 	}
-	streamer.cursor = end;
 
-	return streamer.seek(start_index, end.index + 1);
-},
+    const end_index = streamer.cursor.position.index;
+	return streamer.string.substring(start_index, end_index);
+}
 
-// Value {{{1
-parse_value = function (streamer) {
-	var quote       = streamer.current(),
-		character   = streamer.next(),
-		start_index = streamer.cursor.index;
+function parse_value (streamer) {
+	const quote       = streamer.get_current_character();
+	const start_index = streamer.cursor.position.index;
 
-	for (; character && character !== quote; character = streamer.next()) {
+    let character = streamer.get_next_character();
+    while (character && character !== quote) {
 		if (character === '\\') {
-			streamer.next();
+            streamer.cursor.move_next();
 		}
+        character = streamer.next(true);
 	}
-	return streamer.seek(start_index);
-},
 
-// Content {{{1
-parse_content = function (streamer) {
-	var character = streamer.next(), content;
-	if (character === '"' || character === "'") {
-		content = parse_value(streamer);
-		streamer.next(true);
+    const end_index = streamer.cursor.position.index;
+	return streamer.string.substring(start_index + 1, end_index);
+}
+
+function parse_identifier (streamer) {
+	const start_index = streamer.cursor.position.index;
+
+    let ch = streamer.get_current_character(), length = 0;
+	while (ch && ch > ' ' && ! delimiters.includes(ch)) {
+        length += 1;
+        ch = streamer.at(start_index + length);
 	}
-	return content;
-},
+    streamer.cursor.move(length - 1);
 
-// Attrs {{{1
-parse_attrs = function (streamer, token) {
-	var character = streamer.next(true),
-		attrs  = token.attrs,
-		events = token.events,
-		i, key, value;
+	return streamer.substring_from_offset(start_index);
+}
+
+function add_class (class_list, classes) {
+    classes.split(WHITESPACE_REGEX).filter(c => c).forEach(class_name => {
+        if (! class_list.includes(class_name)) {
+            class_list.push(class_name);
+        }
+    });
+}
+
+function parse_attrs (streamer, attrs, events, class_list) {
+	let character = streamer.next(true), value;
 
 	while (character && character !== ']') {
 		if (character === '(') {
 			streamer.next(true);
-			key = parse_identifier(streamer);
+			const key = parse_identifier(streamer);
 			character = streamer.next(true);
 
 			if (character !== ')') {
-				throw new SyntaxError("[JeefoTemplate]: Invalid syntax error.");
+				throw new SyntaxError("[JeefoTemplate]: Invalid event");
 			}
 
-			character = streamer.next(true);
-			if (character === '=') {
+			if (streamer.next(true) === '=') {
 				streamer.next(true);
-				value = parse_value(streamer);
-				character = streamer.next(true);
+				value     = parse_value(streamer);
+                character = streamer.next(true);
 			} else {
-				throw new SyntaxError("[JeefoTemplate]: Invalid syntax error, empty event.");
+				throw new SyntaxError("[JeefoTemplate]: Empty event.");
 			}
 
-			events.set(key, value);
+			events[key] = value;
 		} else {
-			key = dash_case(parse_identifier(streamer));
-
+			const key = dash_case(parse_identifier(streamer));
 			character = streamer.next(true);
 
 			if (character === '=') {
-				streamer.next(true);
-				value = parse_value(streamer);
-				character = streamer.next(true);
+			    streamer.next(true);
+				value     = parse_value(streamer);
+                character = streamer.next(true);
 			} else if (key === "class") {
-				throw new SyntaxError("[JeefoTemplate]: Expected class value.");
+				throw new SyntaxError("[JeefoTemplate]: Missing class value.");
 			} else {
-				value = null;
-			}
+                value = undefined;
+            }
 
 			if (key === "class") {
-				key   = token.class_list.list;
-				value = new ClassList(value.split(WHITESPACE_REGEX));
-
-				for (i = 0; i < key.length; ++i) {
-					value.add(key[i]);
-				}
-
-				token.class_list = value;
+                add_class(class_list, value);
 			} else {
-				attrs.set(key, value);
+                attrs.set(key, value);
 			}
 		}
 
@@ -120,71 +118,90 @@ parse_attrs = function (streamer, token) {
 			character = streamer.next(true);
 		}
 	}
-};
-// }}}1
+}
 
 module.exports = {
-	protos : {
-		type       : "Element",
-		initialize : function (character, streamer) {
-			var start = streamer.get_cursor(), end, _class;
+    id       : "Element",
+    priority : 0,
 
-			this.type       = this.type;
-			this.attrs      = new Attributes();
-			this.events     = new Events();
-			this.class_list = new ClassList();
+	is         : () => true,
+    initialize : (token, current_character, streamer) => {
+        const start      = streamer.clone_cursor_position();
+        const attrs      = new Attributes();
+        const events     = Object.create(null);
+        const class_list = [];
 
-			switch (character) {
-				case '.':
-				case '#':
-				case '[':
-				case '(':
-				case '+':
-				case '>':
-				case '^':
-					this.name = null;
-					break;
-				default:
-					this.name = parse_identifier(streamer);
-					end       = streamer.get_cursor();
-					character = streamer.next(true);
-			}
+        let id      = null;
+        let name    = null;
+        let content = null;
 
-			LOOP:
-			while (true) {
-				switch (character) {
-					case '.' :
-						streamer.next(true);
-						_class = parse_identifier(streamer);
-						this.class_list.add(_class);
-						end       = streamer.get_cursor();
-						character = streamer.next(true);
-						break;
-					case '#' :
-						this.id   = parse_identifier(streamer);
-						end       = streamer.get_cursor();
-						character = streamer.next(true);
-						break;
-					default:
-						break LOOP;
-				}
-			}
+        if (! special_characters.includes(current_character)) {
+            name = dash_case(parse_identifier(streamer));
+            streamer.cursor.save();
+            current_character = streamer.next(true);
+        }
 
-			if (character === '[') {
-				parse_attrs(streamer, this);
-				end       = streamer.get_cursor();
-				character = streamer.next(true);
-			}
+        LOOP:
+        while (true) {
+            switch (current_character) {
+                case '.' :
+                    if (streamer.cursor.has_saved_position()) {
+                        streamer.cursor.commit();
+                    }
+                    streamer.next(true);
+                    const class_name = parse_identifier(streamer);
+                    if (! class_name) {
+                        throw new SyntaxError("Invalid class");
+                    }
+                    if (! class_list.includes(class_name)) {
+                        class_list.push(class_name);
+                    }
 
-			if (character && character === '(') {
-				this.content = parse_content(streamer);
-				end = streamer.get_cursor();
-			}
+                    streamer.cursor.save();
+                    current_character = streamer.next(true);
+                    break;
+                case '#' :
+                    if (streamer.cursor.has_saved_position()) {
+                        streamer.cursor.commit();
+                    }
+                    streamer.next(true);
+                    id = parse_identifier(streamer);
+                    if (! id) {
+                        throw new SyntaxError("Invalid id");
+                    }
 
-			this.start = start;
-			this.end   = end_cursor(end);
+                    streamer.cursor.save();
+                    current_character = streamer.next(true);
+                    break;
+                default:
+                    break LOOP;
+            }
+        }
 
-			streamer.cursor = end;
-		}
-	}
+        if (current_character === '[') {
+            if (streamer.cursor.has_saved_position()) {
+                streamer.cursor.commit();
+            }
+            parse_attrs(streamer, attrs, events, class_list);
+
+            streamer.cursor.save();
+            current_character = streamer.next(true);
+        }
+
+        if (current_character && current_character === '(') {
+            streamer.cursor.commit();
+            content = parse_content(streamer);
+        } else if (streamer.cursor.has_saved_position()) {
+            streamer.cursor.rollback();
+        }
+
+        token._id        = id;
+        token.name       = name;
+        token.attrs      = attrs;
+        token.events     = events;
+        token.class_list = class_list;
+        token.content    = content;
+        token.start      = start;
+        token.end        = streamer.clone_cursor_position();
+    }
 };

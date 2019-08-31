@@ -1,21 +1,23 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : attributes.js
 * Created at  : 2017-08-14
-* Updated at  : 2017-08-26
+* Updated at  : 2019-06-22
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* globals */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var dash_case          = require("jeefo_utils/string/dash_case"),
-	object_keys        = Object.keys,
-	array_remove       = require("jeefo_utils/array/remove"),
+const dash_case    = require("./utils/dash_case");
+//const array_remove = require("./utils/array_remove");
+
+var object_keys        = Object.keys,
 	NEW_LINE_REGEX     = /\n/g,
 	SINGLE_QUOTE_REGEX = /'/g;
 
@@ -59,27 +61,26 @@ var stringify = function (object) {
 	return `{ ${ result } }`;
 };
 
-var Attributes = function () {
-	this.keys   = [];
-	this.values = {};
-};
+class Attributes {
+    constructor () {
+        this.values = Object.create(null);
+    }
 
-Attributes.prototype = {
-	get : function (key) {
+	get (key) {
 		return this.values[dash_case(key)];
-	},
-	set : function (key, value) {
+	}
+	set (key, value) {
 		if (this.keys.indexOf(key) === -1) {
 			this.keys.push(key);
 		}
 		this.values[key] = value;
-	},
-	remove : function (key) {
-		array_remove(this.keys, key);
-	},
-	has : function (key) {
+	}
+	has (key) {
 		return this.keys.indexOf(key) !== -1;
-	},
+	}
+	remove (key) {
+	}
+    /*
 	clone : function () {
 		var attrs  = new Attributes(),
 			keys   = this.keys,   _keys   = attrs.keys,
@@ -93,7 +94,7 @@ Attributes.prototype = {
 
 		return attrs;
 	},
-	compile : function () {
+	compile () {
 		var result = '', keys = this.keys, i = keys.length, value;
 
 		while (i--) {
@@ -120,6 +121,7 @@ Attributes.prototype = {
 
 		return result;
 	}
-};
+    */
+}
 
 module.exports = Attributes;

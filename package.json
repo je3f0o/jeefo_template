@@ -22,5 +22,7 @@
     "template"
   ],
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "jeefo_tokenizer": "0.0.37"
+  }
 }

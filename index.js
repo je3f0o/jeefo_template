@@ -1,54 +1,37 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : index.js
 * Created at  : 2017-08-09
-* Updated at  : 2017-08-24
+* Updated at  : 2019-06-25
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* globals */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var parser = require("./parser");
+exports.parse = require("./parser");
 
-module.exports = function (source, indent, tab_space) {
-	var line_break = '', current_indent = '', indentation = '',
-		nodes = parser(source, tab_space),
-		last = nodes.pop(), i = nodes.length, result;
+exports.compile = nodes => {
+    return nodes.map(node => {
+        const attrs        = [];
+        const element_name = node.name || "div";
+        let content = '';
 
-	if (indent) {
-		current_indent = indent.indent || '';
+        if (node.id) {
+            attrs.push(`id="${ node.id }"`);
+        }
+        if (node.class_list) {
+            attrs.push(`class="${ node.class_list.join(' ') }"`);
+        }
+        Object.keys(node.attrs).forEach(key => {
+            attrs.push(`${ key }="${ node.attrs[key] }"`);
+        });
 
-		if (indent.type) {
-			switch (indent.type) {
-				case "tab" :
-					indentation = '\t';
-					break;
-				case "space" :
-					tab_space = indent.space || 4;
-					while (tab_space--) {
-						indentation += ' ';
-					}
-					break;
-			}
-		} else {
-			indentation = '\t';
-		}
-
-		line_break = '\n';
-	}
-
-	if (last) {
-		result = last.compile(current_indent, indentation);
-	}
-
-	while (i--) {
-		result = `${ nodes[i].compile(current_indent, indentation) }${ line_break }${ result }`;
-	}
-
-	return result;
+        return `<${ element_name }${ attrs }>${ content }</${ element_name }>`;
+    }).join('');
 };

@@ -1,35 +1,65 @@
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : node_element.js
 * Created at  : 2017-08-11
-* Updated at  : 2017-09-17
+* Updated at  : 2019-07-18
 * Author      : jeefo
 * Purpose     :
 * Description :
-_._._._._._._._._._._._._._._._._._._._._.*/
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.*/
 // ignore:start
+"use strict";
 
-/* globals */
-/* exported */
+/* globals*/
+/* exported*/
 
 // ignore:end
 
-var Events           = require("./events"),
-	dash_case        = require("jeefo_utils/string/dash_case"),
-	ClassList        = require("./class_list"),
-	Attributes       = require("./attributes"),
-	SELF_CLOSED_TAGS = ["img", "input", "hr", "br", "col"];
+const object_assign = require("@jeefo/utils/object/assign");
 
-var NodeElement = function (token, parent) {
-	this.id         = token.id || null;
-	this.name       = token.name ? dash_case(token.name) : null;
-	this.attrs      = token.attrs  || new Attributes();
-	this.events     = token.events || new Events();
-	this.parent     = parent || null;
-	this.content    = token.content || null;
-	this.children   = token.children || [];
-	this.class_list = token.class_list || new ClassList();
-};
+//const SELF_CLOSED_TAGS = ["img", "input", "hr", "br", "col"];
 
+class NodeElement {
+    constructor (id, token, parent = null) {
+        this.id         = id;
+        this.name       = token.name || "div";
+        this.attrs      = token.attrs;
+        this.events     = token.events;
+        this.parent     = parent;
+        this.content    = token.content;
+        this.children   = [];
+        this.class_list = token.class_list;
+    }
+
+    add_child (node) {
+        this.children.push(node);
+    }
+
+    last_child () {
+        return this.children[this.children.length - 1];
+    }
+
+    //to_html () {}
+
+    clone (is_deep) {
+        const node = new NodeElement(this.id, {
+            name       : this.name,
+            content    : this.content,
+            attrs      : this.attrs.clone(),
+            events     : object_assign(this.events),
+            class_list : this.class_list.concat(),
+        }, this.parent);
+
+        if (is_deep) {
+            node.children = this.children.map(child => child.clone(true));
+        } else {
+            node.children = this.children;
+        }
+
+        return node;
+    }
+}
+
+/*
 NodeElement.prototype = {
 	clear : function () {
 		this.id         = null;
@@ -96,5 +126,6 @@ NodeElement.prototype = {
 		return `<${ name }${ attrs }>${ content }</${ name }>`;
 	},
 };
+*/
 
 module.exports = NodeElement;
