@@ -12,6 +12,7 @@
     "main": "index.js",
     "scripts": {
         "save": "git add . && git c \"`date`\" && git p",
+        "save_version": "git add . && git c \"v$npm_package_version\" && git p",
         "jeefo_publish": "node node_modules/@jeefo/publish/publish.js"
     },
     "repository": {
