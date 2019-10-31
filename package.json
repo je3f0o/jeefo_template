@@ -1,7 +1,7 @@
 {
-  "name": "jeefo_template",
-  "version": "0.0.20",
-  "description": "jeefo template",
+  "name": "@jeefo/template",
+  "version": "0.0.0",
+  "description": "Part of jeefo framework.",
   "author": {
     "name": "je3f0o",
     "email": "je3f0o@gmail.com"
@@ -10,19 +10,23 @@
   "license": "MIT",
   "copyright": "2017",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "save": "git add . && git c \"`date`\" && git p",
+    "jeefo_publish": "node node_modules/@jeefo/publish/publish.js"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/je3f0o/jeefo_template.git"
+    "url": "git@github.com:je3f0o/jeefo_template.git"
   },
   "keywords": [
     "jeefo",
     "token",
-    "tokenizer",
     "template"
   ],
-  "devDependencies": {},
+  "devDependencies": {
+    "@jeefo/publish": "0.0.31"
+  },
   "dependencies": {
-    "jeefo_tokenizer": "0.0.37"
+    "@jeefo/tokenizer": "0.0.4"
   }
 }

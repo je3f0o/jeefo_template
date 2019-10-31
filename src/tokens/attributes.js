@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : attributes.js
 * Created at  : 2017-08-14
-* Updated at  : 2019-07-11
+* Updated at  : 2019-09-10
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -46,6 +46,13 @@ class Attributes {
         const { names, values } = this;
         for (let i = 0; i < names.length; ++i) {
             callback(names[i], values[names[i]]);
+        }
+    }
+
+    * [Symbol.iterator] () {
+        const { names, values } = this;
+        for (let i = 0; i < names.length; ++i) {
+            yield [names[i], values[names[i]]];
         }
     }
 

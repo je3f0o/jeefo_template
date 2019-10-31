@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : element.js
 * Created at  : 2017-08-26
-* Updated at  : 2019-07-09
+* Updated at  : 2019-10-07
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -15,6 +15,7 @@
 // ignore:end
 
 const dash_case  = require("@jeefo/utils/string/dash_case");
+const Events     = require("./events");
 const Attributes = require("./attributes");
 
 const delimiters         = ".,>+^[]()=\"'#{}";
@@ -58,7 +59,9 @@ function parse_identifier (streamer) {
         length += 1;
         ch = streamer.at(start_index + length);
 	}
-    streamer.cursor.move(length - 1);
+    if (length) {
+        streamer.cursor.move(length - 1);
+    }
 
 	return streamer.substring_from_offset(start_index);
 }
@@ -92,7 +95,7 @@ function parse_attrs (streamer, attrs, events, class_list) {
 				throw new SyntaxError("[JeefoTemplate]: Empty event.");
 			}
 
-			events[key] = value;
+			events.add(key, value);
 		} else {
 			const key = dash_case(parse_identifier(streamer));
 			character = streamer.next(true);
@@ -128,7 +131,7 @@ module.exports = {
     initialize : (token, current_character, streamer) => {
         const start      = streamer.clone_cursor_position();
         const attrs      = new Attributes();
-        const events     = Object.create(null);
+        const events     = new Events();
         const class_list = [];
 
         let id      = null;
