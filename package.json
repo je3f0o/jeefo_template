@@ -1,6 +1,6 @@
 {
     "name": "@jeefo/template",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Part of jeefo framework.",
     "author": {
         "name": "je3f0o",
@@ -28,6 +28,6 @@
         "@jeefo/publish": "0.0.31"
     },
     "dependencies": {
-        "@jeefo/tokenizer": "0.0.4"
+        "@jeefo/tokenizer": "0.0.5"
     }
 }
