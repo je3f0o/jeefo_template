@@ -1,1 +1,1 @@
-@jeefo/template part of jeefo framework.
+@jeefo/template part of jeefo framework. (under development...)
