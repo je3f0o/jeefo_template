@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : parser.js
 * Created at  : 2017-08-12
-* Updated at  : 2019-07-06
+* Updated at  : 2020-10-22
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -20,58 +20,58 @@ const NodeElement = require("./node_element");
 module.exports = function (code, tab_space) {
 	tokenizer.init(code, tab_space);
 
-	const root = new NodeElement(null, {});
+	const result = [];
 
 	let token          = tokenizer.get_next_token();
-	let parent_element = root;
+	let parent_element = null;
+    let expect_element = true;
     let node, last_token;
 
 	while (token) {
 		switch (token.id) {
 			case "Element":
-				node = new NodeElement(token._id, token, parent_element);
-                parent_element.add_child(node);
+                if (expect_element) {
+                    node = new NodeElement(token, parent_element);
+                    if (parent_element) {
+                        parent_element.add_child(node);
+                    } else {
+                        result.push(node);
+                    }
+                    expect_element = false;
+                } else {
+                    const str = tokenizer.streamer.substring_from_token(token);
+                    throw new Error(`Unexpected element: ${str}`);
+                }
 				break;
 			case "Operator":
 				switch (token.operator) {
+					case '^' :
+                        if (parent_element) {
+                            parent_element = parent_element.parent;
+                        } else {
+                            throw new Error("Expected operator");
+                        }
+						break;
 					case '+' :
-						if (last_token.operator === '>') {
-							node = new NodeElement(null, {}, parent_element);
-                            parent_element.add_child(node);
-						}
-
-						switch (last_token.operator) { case '+' : case '>' :
-							node = new NodeElement(null, {}, parent_element);
-                            parent_element.add_child(node);
-						}
+                        if (expect_element) {
+                            throw new Error("Unexpected operator");
+                        }
 						break;
 					case '>' :
-						switch (last_token.operator) {
-							case '+' :
-							case '>' :
-								node = new NodeElement(null, {}, parent_element);
-								parent_element.add_child(node);
-								parent_element = node;
-								break;
-							default:
-								parent_element = parent_element.last_child();
-						}
-						break;
-					case '^' :
-						if (last_token.operator === '>') {
-							node = new NodeElement(null, {}, parent_element);
-                            parent_element.add_child(node);
-						}
-
-						if (parent_element.parent) {
-							parent_element = parent_element.parent;
-						} else {
-							throw new Error("No parent element");
-						}
+                        if (expect_element) {
+                            throw new Error("Unexpected operator");
+                        }
+                        const arr = parent_element
+                            ? parent_element.children : result;
+                        parent_element = arr[arr.length - 1];
+                        if (parent_element.content) {
+                            throw new Error("Ambiguous children");
+                        }
 						break;
 					default:
 						throw new Error("Invalid Operator");
 				}
+                expect_element = true;
 				break;
 		}
 
@@ -79,14 +79,5 @@ module.exports = function (code, tab_space) {
         token      = tokenizer.get_next_token();
 	}
 
-    /*
-	switch (last_token.operator) { case '+': case '>':
-		if (! last_token.compiled) {
-			node = new NodeElement({}, parent_element);
-			parent_element.children[parent_element.children.length] = node;
-		}
-	}
-    */
-
-	return root.children;
+	return result;
 };

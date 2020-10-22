@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : attributes.js
 * Created at  : 2017-08-14
-* Updated at  : 2019-09-10
+* Updated at  : 2020-10-22
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -15,73 +15,19 @@
 
 // ignore:end
 
-const array_remove = require("@jeefo/utils/array/remove");
-
 class Attributes {
-    constructor () {
-        this.names  = [];
-        this.values = {};
+    get length () {
+        return Object.keys(this).length;
     }
 
-    has (name) {
-        return this.names.includes(name);
-    }
-
-    get (name) {
-        return this.values[name];
-    }
-
-    set (name, value) {
-        if (! this.names.includes(name)) {
-            this.names.push(name);
-        }
-        this.values[name] = value;
-    }
-
-    remove (name) {
-        array_remove(this.names, name);
-    }
-
-    each (callback) {
-        const { names, values } = this;
-        for (let i = 0; i < names.length; ++i) {
-            callback(names[i], values[names[i]]);
-        }
-    }
-
-    * [Symbol.iterator] () {
-        const { names, values } = this;
-        for (let i = 0; i < names.length; ++i) {
-            yield [names[i], values[names[i]]];
-        }
-    }
-
-    filter (callback) {
-        const { names, values } = this;
-        for (let i = 0; i < names.length; ++i) {
-            if (! callback(names[i], values[names[i]])) {
-                names.splice(i, 1);
-                i -= 1;
-            }
-        }
-    }
-
-    find (callback) {
-        const { names, values } = this;
-        for (let i = 0; i < names.length; ++i) {
-            if (callback(names[i], values[names[i]])) {
-                return names[i];
-            }
-        }
+    toString () {
+        return Object.keys(this).map(key => {
+            return this[key] === null ? key : `${key}="${this[key]}"`;
+        }).join(' ');
     }
 
     clone () {
-        const clone = new Attributes();
-        this.names.forEach(name => {
-            clone.names.push(name);
-            clone.values[name] = this.values[name];
-        });
-        return clone;
+        return Object.assign(new Attributes(), this);
     }
 }
 

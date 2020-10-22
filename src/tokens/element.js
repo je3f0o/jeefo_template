@@ -1,7 +1,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 * File Name   : element.js
 * Created at  : 2017-08-26
-* Updated at  : 2019-10-07
+* Updated at  : 2020-10-22
 * Author      : jeefo
 * Purpose     :
 * Description :
@@ -15,20 +15,22 @@
 // ignore:end
 
 const dash_case  = require("@jeefo/utils/string/dash_case");
-const Events     = require("./events");
 const Attributes = require("./attributes");
 
 const delimiters         = ".,>+^[]()=\"'#{}";
-const special_characters = ".#[(+>^";
+const special_characters = ".#[(";
 
 const WHITESPACE_REGEX = /\s+/;
 
 function parse_content (streamer) {
 	const start_index = streamer.cursor.position.index + 1;
 
-	let character = streamer.next();
+    let character = streamer.next();
 	while (character && character !== ')') {
-        character = streamer.next();
+		if (character === '\\') {
+            streamer.cursor.move_next();
+		}
+        character = streamer.next(true);
 	}
 
     const end_index = streamer.cursor.position.index;
@@ -66,21 +68,13 @@ function parse_identifier (streamer) {
 	return streamer.substring_from_offset(start_index);
 }
 
-function add_class (class_list, classes) {
-    classes.split(WHITESPACE_REGEX).filter(c => c).forEach(class_name => {
-        if (! class_list.includes(class_name)) {
-            class_list.push(class_name);
-        }
-    });
-}
-
-function parse_attrs (streamer, attrs, events, class_list) {
-	let character = streamer.next(true), value;
+function parse_attrs (streamer, attrs) {
+	let character = streamer.next(true), key, value;
 
 	while (character && character !== ']') {
 		if (character === '(') {
 			streamer.next(true);
-			const key = parse_identifier(streamer);
+			key = parse_identifier(streamer);
 			character = streamer.next(true);
 
 			if (character !== ')') {
@@ -95,28 +89,24 @@ function parse_attrs (streamer, attrs, events, class_list) {
 				throw new SyntaxError("[JeefoTemplate]: Empty event.");
 			}
 
-			events.add(key, value);
+            key = `on--${key}`.toLowerCase();
 		} else {
-			const key = dash_case(parse_identifier(streamer));
+			key = dash_case(parse_identifier(streamer));
 			character = streamer.next(true);
 
 			if (character === '=') {
 			    streamer.next(true);
 				value     = parse_value(streamer);
                 character = streamer.next(true);
-			} else if (key === "class") {
-				throw new SyntaxError("[JeefoTemplate]: Missing class value.");
 			} else {
-                value = undefined;
+                value = null;
             }
-
-			if (key === "class") {
-                add_class(class_list, value);
-			} else {
-                attrs.set(key, value);
-			}
 		}
 
+        if (attrs[key]) {
+            throw new Error(`Duplicated attribute: ${key}`);
+        }
+        attrs[key] = value;
 		while (character === ',') {
 			character = streamer.next(true);
 		}
@@ -131,10 +121,8 @@ module.exports = {
     initialize : (token, current_character, streamer) => {
         const start      = streamer.clone_cursor_position();
         const attrs      = new Attributes();
-        const events     = new Events();
-        const class_list = [];
+        const class_list = new Set();
 
-        let id      = null;
         let name    = null;
         let content = null;
 
@@ -148,31 +136,27 @@ module.exports = {
         while (true) {
             switch (current_character) {
                 case '.' :
+                    streamer.next();
+                    const class_name = parse_identifier(streamer).trim();
+                    if (!class_name) { throw new SyntaxError("Invalid class"); }
+                    class_list.add(class_name);
+
                     if (streamer.cursor.has_saved_position()) {
                         streamer.cursor.commit();
                     }
-                    streamer.next(true);
-                    const class_name = parse_identifier(streamer);
-                    if (! class_name) {
-                        throw new SyntaxError("Invalid class");
-                    }
-                    if (! class_list.includes(class_name)) {
-                        class_list.push(class_name);
-                    }
-
                     streamer.cursor.save();
                     current_character = streamer.next(true);
                     break;
                 case '#' :
+                    if (attrs.id) { throw new SyntaxError("Invalid syntax"); }
+                    streamer.next();
+                    const id = parse_identifier(streamer).trim();
+                    if (! id) { throw new SyntaxError("Invalid id"); }
+                    attrs.id = id;
+
                     if (streamer.cursor.has_saved_position()) {
                         streamer.cursor.commit();
                     }
-                    streamer.next(true);
-                    id = parse_identifier(streamer);
-                    if (! id) {
-                        throw new SyntaxError("Invalid id");
-                    }
-
                     streamer.cursor.save();
                     current_character = streamer.next(true);
                     break;
@@ -182,29 +166,31 @@ module.exports = {
         }
 
         if (current_character === '[') {
+            parse_attrs(streamer, attrs);
             if (streamer.cursor.has_saved_position()) {
                 streamer.cursor.commit();
             }
-            parse_attrs(streamer, attrs, events, class_list);
-
             streamer.cursor.save();
             current_character = streamer.next(true);
         }
 
-        if (current_character && current_character === '(') {
-            streamer.cursor.commit();
+        if (current_character === '(') {
             content = parse_content(streamer);
-        } else if (streamer.cursor.has_saved_position()) {
+            streamer.cursor.commit();
+        } else {
             streamer.cursor.rollback();
         }
 
-        token._id        = id;
-        token.name       = name;
-        token.attrs      = attrs;
-        token.events     = events;
-        token.class_list = class_list;
-        token.content    = content;
-        token.start      = start;
-        token.end        = streamer.clone_cursor_position();
+        if (class_list.size) {
+            attrs.class = [...class_list].concat(
+                attrs.class ? attrs.class.split(WHITESPACE_REGEX) : []
+            ).join(' ');
+        }
+
+        token.name    = name;
+        token.attrs   = attrs;
+        token.content = content;
+        token.start   = start;
+        token.end     = streamer.clone_cursor_position();
     }
 };
