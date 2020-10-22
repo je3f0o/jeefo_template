@@ -1,6 +1,6 @@
 {
     "name": "@jeefo/template",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Part of jeefo framework. (under development...)",
     "author": {
         "name": "je3f0o",
@@ -27,8 +27,5 @@
     "devDependencies": {
         "@jeefo/publish": "0.0.31"
     },
-    "dependencies": {
-        "@jeefo/tokenizer": "0.0.5",
-        "@jeefo/utils": "0.0.9"
-    }
+    "dependencies": {}
 }
