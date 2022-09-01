@@ -1,6 +1,6 @@
 {
     "name": "@jeefo/template",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Part of jeefo framework. (under development...)",
     "author": {
         "name": "je3f0o",
@@ -9,6 +9,7 @@
     "homepage": "https://github.com/je3f0o/jeefo_template",
     "license": "MIT",
     "copyright": "2017",
+    "bin": "./bin/jt.js",
     "main": "index.js",
     "scripts": {
         "save": "git add . && git c \"`date`\" && git p",
